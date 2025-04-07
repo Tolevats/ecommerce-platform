@@ -7,8 +7,6 @@ export default function Home() {
       <h1>Welcome to My Ecommerce Platform</h1>
       <p className="mt-2 text-sm">This is a test to see if Tailwind CSS is working.</p>
     </div>
-
-    {/* The rest of your component content */}
   </main>
   );
 }

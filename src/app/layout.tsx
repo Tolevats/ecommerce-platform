@@ -18,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning> {/* suppressHydrationWarning useful with theme switching */}
+    <html lang="en" suppressHydrationWarning>{/* suppressHydrationWarning useful with theme switching */}
       <body className={`${inter.className} bg-background-light text-text-light dark:bg-background-dark dark:text-text-dark  transition-colors duration-300`}> {/* Apply Tailwind CSS classes for light/dark mode*/}
         {/* Wrap the children with the QueryProvider */}
         <QueryProvider>
@@ -26,12 +26,11 @@ export default function RootLayout({
           {/* <ThemeProvider attribute="class" defaultTheme="system" enableSystem> */}
              {/* Add Header/Navbar component here later */}
              <main className="container mx-auto px-4 py-8"> {/* Basic layout container */}
-               {children}
+               {children} {/* This is the only children that should render */}
              </main>
              {/* Add Footer component here later */}
           {/* </ThemeProvider> */}
         </QueryProvider>
-        {children}
       </body>
     </html>
   );

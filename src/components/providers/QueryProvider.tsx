@@ -9,7 +9,7 @@ import getQueryClient from "@/lib/query-client"; // Import the cached getter
 export default function QueryProvider({ children }: { children: React.ReactNode }) {
   // Get the singleton QueryClient instance
   const queryClient = getQueryClient();
-
+  console.log("QueryClient instance ID:", queryClient);
   return (
     <QueryClientProvider client={queryClient}>
       {children}
