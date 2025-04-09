@@ -1,4 +1,3 @@
-// src/store/cartStore.ts
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { Product } from '@/lib/types'; // Import Product type
@@ -19,10 +18,6 @@ interface CartState {
     updateQuantity: (productId: number, quantity: number) => void; // Set specific quantity
     clearCart: () => void; // Remove all items
     toggleCart: () => void; // Open/close the cart sidebar
-    // --- Computed/Derived State (Example) ---
-    // Note: Zustand doesn't have built-in selectors like Redux.
-    // Computed values are often derived in the component or via selectors.
-    // We can add helper functions here if needed, or calculate in components.
 }
 
 // Create the Zustand store with persistence
