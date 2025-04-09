@@ -1,0 +1,103 @@
+import React from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { CartItem as CartItemType, useCartStore } from '@/store/cartStore'; // Import type and store hook
+
+interface CartItemProps {
+    item: CartItemType;
+}
+
+/*
+ * Component to display a single item in the shopping cart sidebar.
+ * Allows quantity adjustment and item removal.
+ */
+const CartItem: React.FC<CartItemProps> = ({ item }) => {
+    // Get actions from the Zustand store
+    const { updateQuantity, removeItem } = useCartStore((state) => ({
+        updateQuantity: state.updateQuantity,
+        removeItem: state.removeItem,
+    }));
+
+    const handleQuantityChange = (newQuantity: number) => {
+        updateQuantity(item.product.id, newQuantity);
+    };
+
+    const handleRemove = () => {
+        removeItem(item.product.id);
+    };
+
+    const subtotal = item.product.price * item.quantity;
+
+    return (
+        <li className="flex py-4 border-b border-gray-200 dark:border-gray-700 last:border-b-0">
+          {/* Image */}
+          <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border border-gray-200 dark:border-gray-700 relative bg-gray-50 dark:bg-gray-800">
+            <Image
+              src={item.product.image}
+              alt={item.product.title}
+              fill
+              style={{ objectFit: 'contain' }}
+              sizes="80px"
+              className="p-1"
+              onError={(e) => { e.currentTarget.src = `https://placehold.co/80x80/e2e8f0/9ca3af?text=N/A`; }}
+            />
+          </div>
+
+          <div className="ml-4 flex flex-1 flex-col">
+            <div>
+              {/* Title and Price */}
+              <div className="flex justify-between text-base font-medium text-text-light dark:text-text-dark">
+                <h3>
+                  <Link href={`/products/${item.product.id}`} className="hover:underline">
+                    {item.product.title.length > 35 ? `${item.product.title.substring(0, 35)}...` : item.product.title}
+                  </Link>
+                </h3>
+                <p className="ml-4 whitespace-nowrap">${subtotal.toFixed(2)}</p>
+              </div>
+              {/* Unit Price (Optional) */}
+              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                ${item.product.price.toFixed(2)} each
+              </p>
+            </div>
+            <div className="flex flex-1 items-end justify-between text-sm mt-2">
+              {/* Quantity Selector */}
+              <div className="flex items-center border border-gray-300 dark:border-gray-600 rounded-md">
+                <button
+                  onClick={() => handleQuantityChange(item.quantity - 1)}
+                  disabled={item.quantity <= 1} // Disable decrement at 1
+                  className="px-2 py-1 text-gray-700 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-gray-700 rounded-l-md"
+                  aria-label="Decrease quantity"
+                >
+                  {/* <Minus size={16} /> */} -
+                </button>
+                <span className="px-3 py-1 text-gray-900 dark:text-gray-100 border-x border-gray-300 dark:border-gray-600">
+                  {item.quantity}
+                </span>
+                <button
+                  onClick={() => handleQuantityChange(item.quantity + 1)}
+                  className="px-2 py-1 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-r-md"
+                  aria-label="Increase quantity"
+                >
+                  {/* <Plus size={16} /> */} +
+                </button>
+              </div>
+
+              {/* Remove Button */}
+              <div className="flex">
+                <button
+                  type="button"
+                  onClick={handleRemove}
+                  className="font-medium text-primary hover:text-primary-dark dark:text-primary-light dark:hover:text-primary text-xs"
+                  aria-label="Remove item"
+                >
+                  {/* <X size={16} className="inline mr-1" /> */}
+                  Remove
+                </button>
+              </div>
+            </div>
+          </div>
+        </li>
+    );
+};
+
+export default CartItem;
