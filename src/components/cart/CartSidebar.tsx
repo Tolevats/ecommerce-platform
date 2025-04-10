@@ -1,30 +1,38 @@
 "use client"; // Needs client-side hooks and state
 
-import React, { useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCartStore, selectCartTotal, selectTotalItems } from '@/store/cartStore';
 import CartItem from './CartItem'; // Import the CartItem component
+
 
 /*
  * Sidebar component to display the shopping cart contents.
  */
 const CartSidebar: React.FC = () => {
   // Get state and actions from the Zustand store
-  const { isOpen, items, toggleCart, clearCart } = useCartStore((state) => ({
+  // --- Direct Mount Check ---
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+  // --- End Mount Check ---
+
+  // Get actions directly (unconditional)
+  const { isOpen, toggleCart, clearCart } = useCartStore((state) => ({
     isOpen: state.isOpen,
-    items: state.items,
     toggleCart: state.toggleCart,
     clearCart: state.clearCart,
   }));
 
-  // Calculate total price using the selector function
-  const totalPrice = useCartStore(selectCartTotal);
-  // Calculate total items using the selector function
-  const totalItems = useCartStore(selectTotalItems);
+  // Get state directly (unconditional)
+  const itemsRaw = useCartStore((state) => state.items);
+  const totalPriceRaw = useCartStore(selectCartTotal);
+  const totalItemsRaw = useCartStore(selectTotalItems);
 
-
-  // Memoize the items list to prevent unnecessary re-renders of CartItem components
-  // if other parts of the state (like isOpen) change.
-  const memoizedItems = useMemo(() => items, [items]);
+  // Use state values ONLY after mount, otherwise use defaults
+  const items = isMounted ? itemsRaw : []; // Default to empty array
+  const totalPrice = isMounted ? totalPriceRaw : 0;
+  const totalItems = isMounted ? totalItemsRaw : 0;
 
   return (
     <>
@@ -63,7 +71,7 @@ const CartSidebar: React.FC = () => {
 
         {/* Cart Items List */}
         <div className="flex-1 overflow-y-auto px-4 sm:px-6">
-          {memoizedItems.length === 0 ? (
+          {items === undefined || items.length === 0 ? ( // Check if items is undefined (pre-hydration) or empty
             <div className="flex flex-col items-center justify-center h-full text-center">
                {/* <ShoppingCart size={48} className="text-gray-400 dark:text-gray-500 mb-4" /> */}
                <p className="text-lg font-medium text-gray-500 dark:text-gray-400">Your cart is empty</p>
@@ -71,12 +79,12 @@ const CartSidebar: React.FC = () => {
                   onClick={toggleCart} // Close cart
                   className="mt-4 text-sm font-medium text-primary hover:text-primary-dark dark:text-primary-light dark:hover:text-primary"
                 >
-                  Continue Shopping
+                  {items === undefined ? 'Loading Cart...' : 'Continue Shopping'}
                </button>
             </div>
           ) : (
             <ul role="list" className="-my-4 divide-y divide-gray-200 dark:divide-gray-700">
-              {memoizedItems.map((item) => (
+              {items.map((item) => (
                 <CartItem key={item.product.id} item={item} />
               ))}
             </ul>
@@ -84,7 +92,7 @@ const CartSidebar: React.FC = () => {
         </div>
 
         {/* Footer / Summary */}
-        {memoizedItems.length > 0 && (
+        {items && items.length > 0 && ( // Render footer only if items exist and are not empty
           <div className="border-t border-gray-200 dark:border-gray-700 px-4 sm:px-6 py-6">
              <div className="flex justify-between text-base font-medium text-gray-900 dark:text-white mb-4">
                <p>Subtotal</p>
