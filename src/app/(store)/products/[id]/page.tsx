@@ -1,15 +1,17 @@
 "use client"; // Needed for hooks (useParams, useQuery) and interactivity (button)
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation'; // Hook to get route parameters
 import Image from 'next/image';
 import Link from 'next/link';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getProductById, getProductsByCategory } from '@/lib/api'; // API functions
 import { Product } from '@/lib/types';
 import ProductCard from '@/components/products/ProductCard'; // Reuse ProductCard for related items
+import { useCartStore } from '@/store/cartStore'; // Zustand store for cart state
+import { toast } from 'react-hot-toast'; // For notifications
 
-// Simple Star Rating Component (Example)
+// Simple Star Rating Component
 const StarRating: React.FC<{ rate: number; count: number }> = ({ rate, count }) => {
     const fullStars = Math.floor(rate);
     const halfStar = rate % 1 >= 0.5;
@@ -32,8 +34,20 @@ const StarRating: React.FC<{ rate: number; count: number }> = ({ rate, count }) 
 
 // Product Detail Page : Displays details for a single product and related products.
 export default function ProductDetailPage() {
+  console.log("ProductDetailPage rendered");
     const params = useParams(); // Get route parameters { id: '...' }
     const productId = params.id as string; // Extract the product ID
+    const queryClient = useQueryClient(); // Get query client instance
+
+    // --- Direct Mount Check ---
+    const [isMounted, setIsMounted] = useState(false);
+    useEffect(() => {
+      setIsMounted(true);
+    }, []);
+    // --- End Mount Check ---
+
+    // Get cart actions and state from Zustand store
+    const { addItem: addItemToStore, toggleCart, isOpen: isCartOpen } = useCartStore();
 
     // === Fetch Main Product Data ===
     const {
@@ -53,24 +67,69 @@ export default function ProductDetailPage() {
 
     // === Fetch Related Products (Parallel Query) ===
     const {
-        data: relatedProductsData,
-        isLoading: isLoadingRelated,
-        isError: isErrorRelated,
+      data: relatedProductsData,
+      isLoading: isLoadingRelated,
+      isError: isErrorRelated,
     } = useQuery<Product[], Error>({
         // Query key includes the category of the main product
         queryKey: ['products', product?.category],
         // Fetch products by the category of the currently viewed product
         queryFn: () => getProductsByCategory(product!.category), // Use non-null assertion or check
-        // This query is enabled only AFTER the main product has been fetched successfully
-        // and its category is known.
+        // This query is enabled only AFTER the main product has been fetched successfully and its category is known.
         enabled: !!product?.category,
-      });
+    });
 
       // Filter out the current product from the related products list
       const relatedProducts = relatedProductsData?.filter(p => p.id !== product?.id).slice(0, 4); // Limit to 4 related items
 
-      // === Render Logic ===
+    // === Add Item Mutation ===
+    const { mutate: addItemMutate, isPending: isAddingToCart } = useMutation({
+      // The mutation function now wraps the Zustand store action.
+      // It's synchronous, but making the function async to fit the pattern.
+      mutationFn: async (productToAdd: Product) => {
+          try {
+              console.log("AddItem MutationFn: Adding product to Zustand store", productToAdd.id);
+              addItemToStore(productToAdd, 1); // Call the synchronous Zustand action
+              // No actual async work needed here until calling a backend API
+              return Promise.resolve(); // Indicate success
+          } catch (error) {
+              console.error("AddItem MutationFn: Error adding item", error);
+              return Promise.reject(error); // Indicate failure
+          }
+      },
+      onSuccess: (data, variables) => {
+          // variables is the product that was passed to mutate()
+          console.log("AddItem Mutation: Success for", variables.id);
+          toast.success(`${variables.title} added to cart!`);
+          // Open cart sidebar only if it's not already open
+          if (!isCartOpen) {
+              toggleCart();
+          }
+          // Invalidate queries if adding to cart affected server state
+          queryClient.invalidateQueries({ queryKey: ['cartStatus'] });
+      },
+      onError: (error, variables) => {
+          console.error("AddItem Mutation: Error", error);
+          toast.error(`Failed to add ${variables.title.substring(0,20)}... to cart.`);
+      },
+      onSettled: () => { // Runs after onSuccess or onError
+      console.log("AddItem Mutation: Settled");
+      }
+  });
+  // --- End Add Item Mutation ---
 
+      // --- Handle Add to Cart ---
+      const handleAddToCart = () => {
+        if (product && isMounted) { // Ensure product and component are mounted
+          addItemMutate(product); // Trigger the mutation
+        } else if (!isMounted) {
+            toast.error("Page not fully loaded yet.");
+        } else {
+            toast.error("Product data not available.");
+        }
+      };
+
+      // === Render Logic ===
       // Loading state for the main product
       if (isLoadingProduct) {
         return (
@@ -154,12 +213,22 @@ export default function ProductDetailPage() {
                   ${product.price.toFixed(2)}
                 </p>
 
-                {/* Add to Cart Button (Functionality for later) */}
+                {/* === Add to Cart Button (Using Mutation) === */}
                 <button
-                  // onClick={handleAddToCart} // Implement later
-                  className="w-full md:w-auto px-8 py-3 bg-primary text-white font-semibold rounded-lg shadow-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary-light focus:ring-offset-2 dark:focus:ring-offset-background-dark transition duration-200 ease-in-out"
+                    onClick={handleAddToCart}
+                    // Disable button while the mutation is pending
+                    disabled={isAddingToCart}
+                    className="w-full md:w-auto px-8 py-3 bg-primary text-white font-semibold rounded-lg shadow-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary-light focus:ring-offset-2 dark:focus:ring-offset-background-dark transition-colors duration-200 ease-in-out disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center"
+                    aria-label={`Add ${product.title} to cart`}
                 >
-                  Add to Cart
+                    {isAddingToCart ? (
+                        <>
+                          <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"> <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle> <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path> </svg>
+                          Adding...
+                          </>
+                    ) : (
+                      'Add to Cart'
+                    )}
                 </button>
               </div>
             </div>
