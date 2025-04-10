@@ -1,16 +1,30 @@
 "use client"; // Needed for store hook
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useCartStore, selectTotalItems } from '@/store/cartStore';
+//import toast from 'react-hot-toast';
+import { useShallow } from 'zustand/shallow';
 
 // Header component with site title/logo and cart toggle button.
 const Header: React.FC = () => {
   // Get cart state and actions
-  const { toggleCart } = useCartStore((state) => ({
+  const { toggleCart } = useCartStore(useShallow((state) => ({
     toggleCart: state.toggleCart,
-  }));
-  const totalItems = useCartStore(selectTotalItems); // Get total item count
+  })));
+
+  // --- Direct Mount Check ---
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+  // --- End Mount Check ---
+
+  //Get state directly (unconditional)
+  const totalItemsRaw = useCartStore(selectTotalItems); 
+
+  // Use state values ONLY after mount, otherwise use defaults
+  const totalItems = isMounted ? totalItemsRaw : 0;
 
   return (
     <header className="bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-30">
@@ -29,7 +43,6 @@ const Header: React.FC = () => {
             </Link>
             {/* Add other links here later */}
         </div>
-
 
         {/* Cart Button */}
         <div className="flex items-center">
