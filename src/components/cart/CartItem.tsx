@@ -2,31 +2,107 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { CartItem as CartItemType, useCartStore } from '@/store/cartStore'; // Import type and store hook
+import { useMutation} from '@tanstack/react-query';
+import { toast } from 'react-hot-toast';
 
 interface CartItemProps {
     item: CartItemType;
 }
 
-/*
- * Component to display a single item in the shopping cart sidebar.
- * Allows quantity adjustment and item removal.
- */
+// --- Simulate an async API call for removing item ---
+const simulateRemoveItemAPI = async (productId: number): Promise<{ success: boolean }> => {
+  console.log(`Simulating API call to remove product ID: ${productId}`);
+  await new Promise(resolve => setTimeout(resolve, 750));
+  if (Math.random() < 0.1) {
+      console.error(`Simulated API failure for removing product ID: ${productId}`);
+      throw new Error(`Simulated server error removing item ${productId}`);
+  }
+  console.log(`Simulated API success for removing product ID: ${productId}`);
+  return { success: true };
+};
+// --- End Simulation ---
+
 const CartItem: React.FC<CartItemProps> = ({ item }) => {
-    // Get actions from the Zustand store
-    const { updateQuantity, removeItem } = useCartStore((state) => ({
-        updateQuantity: state.updateQuantity,
-        removeItem: state.removeItem,
-    }));
+//  const queryClient = useQueryClient();
 
+    // Get Zustand actions needed for optimistic update and direct calls
+    const { updateQuantity: updateQuantityInStore, removeItem: removeItemFromStore } = useCartStore(
+      (state) => ({
+          updateQuantity: state.updateQuantity,
+          removeItem: state.removeItem,
+      })
+    );
+
+        // === Remove Item Mutation  ===
+        const { mutate: removeItemMutate, isPending: isRemoving } = useMutation({
+          mutationFn: simulateRemoveItemAPI,
+          onMutate: async (productIdToRemove) => {
+              console.log('Optimistic Remove: Starting mutation for', productIdToRemove);
+              const previousCartItems = useCartStore.getState().items;
+              console.log('Optimistic Remove: Snapshotting previous items', previousCartItems);
+              removeItemFromStore(productIdToRemove); // Optimistically update store
+              console.log('Optimistic Remove: Store updated optimistically');
+              return { previousCartItems };
+          },
+          onError: (err, productIdToRemove, context) => {
+              console.error('Optimistic Remove: Mutation failed', err);
+              if (context?.previousCartItems) {
+                  console.log('Optimistic Remove: Rolling back state to', context.previousCartItems);
+                  useCartStore.setState({ items: context.previousCartItems }); // Restore Zustand state
+              }
+              toast.error(`Failed to remove ${item.product.title.substring(0, 20)}...`);
+          },
+          onSuccess: (data, productIdToRemove) => {
+              console.log('Optimistic Remove: Mutation succeeded for', productIdToRemove);
+              toast.success(`${item.product.title.substring(0, 20)}... removed.`);
+          },
+          onSettled: (data, error, productIdToRemove) => {
+              console.log('Optimistic Remove: Mutation settled for', productIdToRemove);
+          },
+      });
+      // --- End Remove Item Mutation ---
+  
+      // === Update Quantity Mutation ===
+      const { mutate: updateQuantityMutate, isPending: isUpdatingQty } = useMutation({
+          // Mutation function wraps the synchronous Zustand action
+          mutationFn: async (variables: { productId: number; quantity: number }) => {
+              const { productId, quantity } = variables;
+              try {
+                  console.log("UpdateQty MutationFn: Updating quantity in Zustand store", productId, quantity);
+                  updateQuantityInStore(productId, quantity); // Call synchronous Zustand action
+                  return Promise.resolve(); // Indicate success
+              } catch (error) {
+                  console.error("UpdateQty MutationFn: Error updating quantity", error);
+                  return Promise.reject(error); // Indicate failure
+              }
+          },
+          onSuccess: (data, variables) => {
+              console.log("UpdateQty Mutation: Success for", variables.productId, "to quantity", variables.quantity);
+              // Add a success feedback
+              toast.success(`Quantity updated for ${item.product.title.substring(0,20)}...`);
+          },
+          onError: (error, variables) => {
+              console.error("UpdateQty Mutation: Error", error);
+              // Show error for quantity change
+              toast.error(`Failed to update quantity for ${variables}`);
+          },
+      });
+      // --- End Update Quantity Mutation ---
+
+    // --- Event Handlers ---
     const handleQuantityChange = (newQuantity: number) => {
-        updateQuantity(item.product.id, newQuantity);
-    };
+      // Trigger the update quantity mutation
+      updateQuantityMutate({ productId: item.product.id, quantity: newQuantity });
+  };
 
-    const handleRemove = () => {
-        removeItem(item.product.id);
-    };
+  const handleRemove = () => {
+      // Trigger the remove item mutation
+      removeItemMutate(item.product.id);
+  };
+  // --- End Event Handlers ---
 
     const subtotal = item.product.price * item.quantity;
+    const isMutating = isRemoving || isUpdatingQty; // Check if any mutation is pending
 
     return (
         <li className="flex py-4 border-b border-gray-200 dark:border-gray-700 last:border-b-0">
@@ -54,7 +130,7 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
                 </h3>
                 <p className="ml-4 whitespace-nowrap">${subtotal.toFixed(2)}</p>
               </div>
-              {/* Unit Price (Optional) */}
+              {/* Unit Price */}
               <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                 ${item.product.price.toFixed(2)} each
               </p>
@@ -75,6 +151,7 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
                 </span>
                 <button
                   onClick={() => handleQuantityChange(item.quantity + 1)}
+                  disabled={isMutating}
                   className="px-2 py-1 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-r-md"
                   aria-label="Increase quantity"
                 >
@@ -87,11 +164,12 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
                 <button
                   type="button"
                   onClick={handleRemove}
+                  disabled={isMutating}
                   className="font-medium text-primary hover:text-primary-dark dark:text-primary-light dark:hover:text-primary text-xs"
                   aria-label="Remove item"
                 >
                   {/* <X size={16} className="inline mr-1" /> */}
-                  Remove
+                  {isRemoving ? 'Removing...' : 'Remove'}
                 </button>
               </div>
             </div>
