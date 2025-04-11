@@ -77,11 +77,44 @@ const Header: React.FC = () => {
           >
             Products
           </Link>
-          {/* Add other links here later */}
+          {/* Guest Links - Desktop */}
+          {!isAuthenticated && (
+            <>
+              <Link
+                href="/login"
+                className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary-light transition-colors"
+              >
+                Login
+              </Link>
+              <Link
+                href="/register"
+                className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary-light transition-colors"
+              >
+                Register
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Right side icons: Cart and Theme Toggle */}
         <div className="flex items-center space-x-2 sm:space-x-4">
+          {/* Guest Links - Mobile */}
+          {!isAuthenticated && (
+            <div className="flex items-center space-x-2 md:hidden">
+              <Link
+                href="/login"
+                className="px-3 py-1.5 text-sm text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary-light transition-colors"
+              >
+                Login
+              </Link>
+              <Link
+                href="/register"
+                className="px-3 py-1.5 text-sm bg-primary text-white rounded-md hover:bg-primary-dark transition-colors"
+              >
+                Register
+              </Link>
+            </div>
+          )}
           {/* Theme Toggle Button */}
           <ThemeToggleButton />
 
