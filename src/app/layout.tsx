@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import QueryProvider from "@/components/providers/QueryProvider";
 import Header from "@/components/layout/Header";
-//import CartSidebar from "@/components/cart/CartSidebar";
+import CartSidebar from "@/components/cart/CartSidebar";
 import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
@@ -35,7 +35,7 @@ export default function RootLayout({
              <main className="container mx-auto px-4 py-8"> {/* Basic layout container */}
                {children} {/* This is the only children that should render */}
              </main>
-             {/* <CartSidebar /> */}
+             <CartSidebar />
              <Toaster position="bottom-center" reverseOrder={false} /> {/* Add Toaster for notifications */}
              {/* Add Footer component here later */}
           </ThemeProvider>
