@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useCartStore, selectTotalItems } from "@/store/cartStore";
 import { useShallow } from "zustand/shallow";
 import { ThemeToggleButton } from "../ui/ThemeToggleButton";
-import { FaBagShopping } from "react-icons/fa6";
+import { FaUser, FaRegCircleUser, FaUserPlus, FaBagShopping } from "react-icons/fa6";
 import { useAuthStore } from "@/store/authStore"; // Import auth store hook
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
@@ -64,6 +64,7 @@ const Header: React.FC = () => {
               href="/account"
               className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary-light transition-colors"
             >
+              <FaRegCircleUser className="inline-block mr-2" />
               My Account
             </Link>
           )}
@@ -84,6 +85,7 @@ const Header: React.FC = () => {
                 href="/login"
                 className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary-light transition-colors"
               >
+                <FaUser className="inline-block mr-2" />
                 Login
               </Link>
               <Link
@@ -105,12 +107,14 @@ const Header: React.FC = () => {
                 href="/login"
                 className="px-3 py-1.5 text-sm text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary-light transition-colors"
               >
+                <FaUser className="inline-block mr-2" />
                 Login
               </Link>
               <Link
                 href="/register"
                 className="px-3 py-1.5 text-sm bg-primary text-white rounded-md hover:bg-primary-dark transition-colors"
               >
+                <FaUserPlus className="inline-block mr-2" />
                 Register
               </Link>
             </div>
