@@ -1,48 +1,83 @@
 "use client"; // Needed for store hook
 
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { useCartStore, selectTotalItems } from '@/store/cartStore';
-import { useShallow } from 'zustand/shallow';
-import { ThemeToggleButton } from '../ui/ThemeToggleButton';
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import { useCartStore, selectTotalItems } from "@/store/cartStore";
+import { useShallow } from "zustand/shallow";
+import { ThemeToggleButton } from "../ui/ThemeToggleButton";
 import { FaBagShopping } from "react-icons/fa6";
+import { useAuthStore } from "@/store/authStore"; // Import auth store hook
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 // Header component with site title/logo and cart toggle button.
 const Header: React.FC = () => {
+  const router = useRouter();
   // Get cart state and actions
-  const { toggleCart } = useCartStore(useShallow((state) => ({
-    toggleCart: state.toggleCart,
-  })));
+  const { toggleCart } = useCartStore(
+    useShallow((state) => ({
+      toggleCart: state.toggleCart,
+    }))
+  );
+  //Get state directly (unconditional)
+  const totalItemsRaw = useCartStore(selectTotalItems);
 
-  // --- Direct Mount Check ---
+  // Get auth state and actions
+  const { isAuthenticated, user, logout } = useAuthStore(
+    useShallow((state) => ({
+      isAuthenticated: state.isAuthenticated,
+      user: state.user,
+      logout: state.logout,
+    }))
+  );
+
+  // --- Direct Mount Check --- use a 'mounted' state to ensure auth-dependent UI renders only client-side
   const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
     setIsMounted(true);
   }, []);
   // --- End Mount Check ---
 
-  //Get state directly (unconditional)
-  const totalItemsRaw = useCartStore(selectTotalItems); 
-
   // Use state values ONLY after mount, otherwise use defaults
   const totalItems = isMounted ? totalItemsRaw : 0;
 
+  const handleLogout = () => {
+    logout();
+    toast.success("Logged out successfully.");
+    router.push("/products"); // Redirect to Catalog page after logout
+  };
+
   return (
-    <header className="bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-30">
+    <header className="bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-30 transition-colors duration-300">
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Logo/Title */}
-        <div className="flex-shrink-0">  
-          <Link href="/" className="text-xl font-bold text-primary dark:text-primary-light">
+        <div className="flex-shrink-0">
+          <Link
+            href="/products"
+            className="text-xl font-bold text-primary dark:text-primary-light"
+          >
             OnPointStore
           </Link>
+          {/* Conditionally show Account link */}
+          {isMounted && isAuthenticated && (
+            <Link
+              href="/account"
+              className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary-light transition-colors"
+            >
+              My Account
+            </Link>
+          )}
         </div>
 
         {/* Navigation Links */}
         <div className="hidden md:flex space-x-6">
-           <Link href="/products" className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary-light transition-colors">
-             Products
-            </Link>
-            {/* Add other links here later */}
+          <Link
+            href="/products"
+            className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary-light transition-colors"
+          >
+            Products
+          </Link>
+          {/* Add other links here later */}
         </div>
 
         {/* Right side icons: Cart and Theme Toggle */}
@@ -51,17 +86,14 @@ const Header: React.FC = () => {
           <ThemeToggleButton />
 
           {/* Cart Button */}
-          {/* <div className="flex items-center"> */}
-            <button
-              onClick={toggleCart}
-              className="relative p-2 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
-              aria-label={`Open shopping cart with ${totalItems} items`}
-            >
-              {/* Cart Icon SVG */}
-              <FaBagShopping className="h-6 w-6" />
-            {/* <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-            </svg> */}
+          {/* <div className="flex items-center"></div> */}
+          <button
+            onClick={toggleCart}
+            className="relative p-2 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+            aria-label={`Open shopping cart with ${totalItems} items`}
+          >
+            {/* Cart Icon SVG */}
+            <FaBagShopping className="h-7 w-7" />
             {/* Cart Item Count Badge */}
             {totalItems > 0 && (
               <span className="absolute -top-1 -right-1 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
@@ -69,7 +101,44 @@ const Header: React.FC = () => {
               </span>
             )}
           </button>
-          {/* Add User/Account Button here later */}
+          {/* User/Account */}
+          <div className="flex items-center">
+            {/* Render only after client-side hydration */}
+            {!isMounted ? (
+              // Placeholder to prevent layout shift
+              <div className="w-20 h-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+            ) : isAuthenticated ? (
+              // --- Logged In View ---
+              <div className="relative">
+                <button
+                  onClick={handleLogout}
+                  className="ml-2 px-3 py-1.5 text-sm bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
+                >
+                  Logout
+                </button>
+                {/* Simple welcome message - replace with dropdown/avatar later */}
+                <span className="ml-4 text-sm font-medium text-gray-700 dark:text-gray-300 hidden sm:inline">
+                  Hi, {user?.name?.split(" ")[0]}
+                </span>
+              </div>
+            ) : (
+              // --- Logged Out View ---
+              <div className="hidden sm:flex items-center space-x-2">
+                <Link
+                  href="/login"
+                  className="px-3 py-1.5 text-sm text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary-light transition-colors rounded-md border border-gray-300 dark:border-gray-600"
+                >
+                  Login
+                </Link>
+                <Link
+                  href="/register"
+                  className="px-3 py-1.5 text-sm bg-primary text-white rounded-md hover:bg-primary-dark transition-colors"
+                >
+                  Register
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
       </nav>
     </header>
@@ -77,4 +146,3 @@ const Header: React.FC = () => {
 };
 
 export default Header;
-    
