@@ -5,6 +5,8 @@ import Link from "next/link";
 import { CartItem as CartItemType, useCartStore } from "@/store/cartStore"; // Import type and store hook
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
+import { useShallow } from "zustand/shallow"; // Import shallow for Zustand
+//import { FaRegCircleXmark } from "react-icons/fa6"; 
 
 interface CartItemProps {
   item: CartItemType;
@@ -30,10 +32,10 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
   const queryClient = useQueryClient();
 
   // Get Zustand actions needed for optimistic update and direct calls
-  const { updateQuantity: updateQuantityInStore, removeItem: removeItemFromStore } = useCartStore((state) => ({
+  const { updateQuantity: updateQuantityInStore, removeItem: removeItemFromStore } = useCartStore(useShallow((state) => ({
     updateQuantity: state.updateQuantity,
     removeItem: state.removeItem,
-  }));
+  })));
 
   // === Optimistic Remove Item Mutation  ===
   const { mutate: removeItemMutate, isPending: isRemoving } = useMutation({

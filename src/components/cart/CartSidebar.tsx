@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useCartStore, selectCartTotal, selectTotalItems } from '@/store/cartStore';
 import CartItem from './CartItem'; // Import the CartItem component
+import { useShallow } from 'zustand/shallow';
 
 
 /*
@@ -18,14 +19,14 @@ const CartSidebar: React.FC = () => {
   // --- End Mount Check ---
 
   // Get actions directly (unconditional)
-  const { isOpen, toggleCart, clearCart } = useCartStore((state) => ({
+  const { isOpen, toggleCart, clearCart } = useCartStore(useShallow((state) => ({
     isOpen: state.isOpen,
     toggleCart: state.toggleCart,
     clearCart: state.clearCart,
-  }));
+  })));
 
   // Get state directly (unconditional)
-  const itemsRaw = useCartStore((state) => state.items);
+  const itemsRaw = useCartStore(useShallow((state) => state.items));
   const totalPriceRaw = useCartStore(selectCartTotal);
   const totalItemsRaw = useCartStore(selectTotalItems);
 
