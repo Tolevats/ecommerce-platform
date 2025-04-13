@@ -14,6 +14,12 @@ export const metadata: Metadata = {
   title: "E-Commerce Platform",
   description:
     "A modern e-commerce store built with Next.js, React, and TypeScript",
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+  },
   icons: {
     icon: "/src/app/favicon.ico", // Fallback icon
     other: {
@@ -27,17 +33,19 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       {/* suppressHydrationWarning useful with theme switching */}
-      <body className={`${inter.className} bg-background-light text-text-light dark:bg-background-dark dark:text-text-dark  transition-colors duration-300`}
+      <body
+        className={`${inter.className} bg-background-light text-text-light dark:bg-background-dark dark:text-text-dark  transition-colors duration-300`}
       >
         <QueryProvider>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <ClientLayout>{children}</ClientLayout> {/* Render the client component */}
+            <ClientLayout>{children}</ClientLayout>{" "}
+            {/* Render the client component */}
             <CartSidebar />
-            <Toaster position="bottom-center" reverseOrder={false} />{" "}{/* Add Toaster for notifications */}
+            <Toaster position="bottom-center" reverseOrder={false} />{" "}
+            {/* Add Toaster for notifications */}
             <Footer />
           </ThemeProvider>
         </QueryProvider>
