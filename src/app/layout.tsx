@@ -12,14 +12,10 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "E-Commerce Platform",
+
   description:
     "A modern e-commerce store built with Next.js, React, and TypeScript",
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
-  },
+
   icons: {
     icon: "/src/app/favicon.ico", // Fallback icon
     other: {
@@ -27,7 +23,7 @@ export const metadata: Metadata = {
       url: "/src/app/favicon.svg",
       type: "'image/svg+xml",
     },
-  },
+  }
 };
 
 export default function RootLayout({
@@ -53,3 +49,10 @@ export default function RootLayout({
     </html>
   );
 }
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false
+};
