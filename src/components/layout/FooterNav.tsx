@@ -45,7 +45,7 @@ const Footer: React.FC = () => {
               <li>
                 <Link
                   href="/products"
-                  className="text-xs md:text-sm lg:text-base text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary-light transition-colors"
+                  className="text-xs md:text-sm lg:text-base text-gray-600 hover:bg-violet-200 active:text-violet-700 dark:text-gray-400 hover:text-primary dark:hover:text-primary-light transition-colors"
                 >
                   Products
                 </Link>
@@ -53,7 +53,7 @@ const Footer: React.FC = () => {
               <li>
                 <Link
                   href="/"
-                  className="text-xs md:text-sm lg:text-base text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary-light transition-colors"
+                  className="text-xs md:text-sm lg:text-base text-gray-600 hover:bg-violet-200 active:text-violet-700 dark:text-gray-400 hover:text-primary dark:hover:text-primary-light transition-colors"
                 >
                   About Us
                 </Link>
@@ -61,7 +61,7 @@ const Footer: React.FC = () => {
               <li>
                 <Link
                   href="/privacy"
-                  className="text-xs md:text-sm lg:text-base text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary-light transition-colors"
+                  className="text-xs md:text-sm lg:text-base text-gray-600 hover:bg-violet-200 active:text-violet-700 dark:text-gray-400 hover:text-primary dark:hover:text-primary-light transition-colors"
                 >
                   Privacy Policy
                 </Link>
@@ -78,7 +78,7 @@ const Footer: React.FC = () => {
               <li>
                 <Link
                   href="/faq"
-                  className="text-xs md:text-sm lg:text-base text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary-light transition-colors"
+                  className="text-xs md:text-sm lg:text-base text-gray-600 hover:bg-violet-200 active:text-violet-700 dark:text-gray-400 hover:text-primary dark:hover:text-primary-light transition-colors"
                 >
                   FAQ
                 </Link>
@@ -86,7 +86,7 @@ const Footer: React.FC = () => {
               <li>
                 <Link
                   href="/shipping"
-                  className="text-xs md:text-sm lg:text-base text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary-light transition-colors"
+                  className="text-xs md:text-sm lg:text-base text-gray-600 hover:bg-violet-200 active:text-violet-700 dark:text-gray-400 hover:text-primary dark:hover:text-primary-light transition-colors"
                 >
                   Shipping
                 </Link>
@@ -94,7 +94,7 @@ const Footer: React.FC = () => {
               <li>
                 <Link
                   href="/returns"
-                  className="text-xs md:text-sm lg:text-base text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary-light transition-colors"
+                  className="text-xs md:text-sm lg:text-base text-gray-600 hover:bg-violet-200 active:text-violet-700 dark:text-gray-400 hover:text-primary dark:hover:text-primary-light transition-colors"
                 >
                   Returns
                 </Link>
@@ -113,7 +113,7 @@ const Footer: React.FC = () => {
                 target="_blank"
                 rel="noreferrer noopener"
                 aria-label="Instagram"
-                className="text-gray-500 hover:text-primary dark:hover:text-primary-light transition-colors"
+                className="text-gray-500 hover:bg-violet-300 active:text-violet-700 dark:hover:text-violet-400 transition-colors"
               >
                 <FaInstagram className="h-6 w-6 md:h-8 md:w-8 lg:h-10 lg:w-10" />
               </a>
@@ -122,7 +122,7 @@ const Footer: React.FC = () => {
                 target="_blank"
                 rel="noreferrer noopener"
                 aria-label="X"
-                className="text-gray-500 hover:text-primary dark:hover:text-primary-light transition-colors"
+                className="text-gray-500 hover:bg-violet-300 active:text-violet-700 dark:hover:text-violet-400 transition-colors"
               >
                 <FaSquareXTwitter className="h-6 w-6 md:h-8 md:w-8 lg:h-10 lg:w-10" />
               </a>
@@ -131,7 +131,7 @@ const Footer: React.FC = () => {
                 target="_blank"
                 rel="noreferrer noopener"
                 aria-label="Facebook"
-                className="text-gray-500 hover:text-primary dark:hover:text-primary-light transition-colors"
+                className="text-gray-500 hover:bg-violet-300 active:text-violet-700 dark:hover:text-violet-400 transition-colors"
               >
                 <FaSquareFacebook className="h-6 w-6 md:h-8 md:w-8 lg:h-10 lg:w-10" />
               </a>
@@ -140,8 +140,8 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Bottom Footer: Copyright & Author */}
-        <div className="pt-8 border-gray-200 dark:border-gray-600 text-center space-y-2">
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center">
+        <div className="border-gray-200 dark:border-gray-600 text-center space-y-2">
+          <div className="border-t border-gray-800 mt-4 pt-4 text-center">
             <p className="text-xs md:text-sm lg:text-base text-gray-500 dark:text-gray-400">
               &copy; {new Date().getFullYear()} OnPointStore. All rights reserved.
             </p>
