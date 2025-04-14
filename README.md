@@ -94,6 +94,11 @@ src/
 ├── store/ # Zustand state management stores (cartStore.ts, authStore.ts)
 └── styles/ # Global styles (globals.css)
 
+## Design Assets
+
+* **Flow Diagram:** [Link to flow-diagram.pdf](./public/assets/design/flow-diagram.pdf) 
+* **User Journey:** [Link to user-journey.png](./public/assets/design/user-journey.png)
+
 ## Technical Decisions & Architecture
 
 * **Next.js App Router:** Chosen for its Server Components capabilities (though primarily used Client Components here for interactivity), improved data fetching patterns, and nested layout features.
@@ -107,9 +112,12 @@ src/
 
 ## Challenges Faced & Solutions
 
-* **Hydration Mismatches:** Encountered potential hydration errors when using persisted state (Zustand with `persist`, `next-themes`) because the server might render a default state while the client hydrates with persisted state. Solved by implementing `isMounted` checks in components (`ThemeProvider`, `ThemeToggleButton`, `Header`) to ensure UI dependent on persisted state only renders client-side.
-* **API Limitations:** The Fake Store API lacks features like server-side pagination or robust filtering, requiring client-side workarounds (fetching all products for filtering/pagination).
-* **`useMutation` for Client State:** Decided against using `useMutation` for simple client state updates (like adding to the Zustand cart) as it added unnecessary complexity compared to directly calling store actions. `useMutation` was used primarily to demonstrate optimistic updates in the cart removal simulation.
+* **Zustand Hydration Conflicts:** Significant challenges were encountered with hydration errors (`getServerSnapshot`, `Maximum update depth exceeded`) when using Zustand's `persist` middleware with `sessionStorage`/`localStorage` in the Next.js App Router. The initial client render state (from storage) conflicted with the server-rendered state.
+    * **Solution:** Implemented an `isMounted` state check within components (`Header`, `CartSidebar`) that display persisted state. These components render default/placeholder values initially and only display the actual state from Zustand after the `useEffect` hook confirms the component has mounted on the client. This aligns the initial client render with the server render, resolving the errors.
+* **`useShallow` for Performance:** When selecting object slices from Zustand (e.g., `{ user, isAuthenticated }`), React might re-render even if the underlying values haven't changed, simply because the object reference is new on each render.
+    * **Solution:** Imported and used `useShallow` from `zustand/react/shallow` as the second argument to the `useAuthStore` hook in the `Header` component. This ensures the component only re-renders if the actual values within the selected slice change.
+* **API Limitations:** The Fake Store API lacks features like server-side pagination, requiring client-side workarounds.
+* **`useMutation` Requirement:** Adapting `useMutation` for synchronous client-state updates (Zustand) required wrapping the synchronous store actions within the `mutationFn`, adding a layer of indirection primarily to meet the evaluation criteria.
 
 ## Future Improvements
 
