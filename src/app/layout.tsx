@@ -1,5 +1,5 @@
 import "./globals.css"; // Import global styles
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import QueryProvider from "@/components/providers/QueryProvider";
 import CartSidebar from "@/components/cart/CartSidebar";
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
       url: "/src/app/favicon.svg",
       type: "'image/svg+xml",
     },
-  }
+  },
 };
 
 export default function RootLayout({
@@ -31,14 +31,14 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      {/* suppressHydrationWarning useful with theme switching */}
+      {" "}
       <body
         className={`${inter.className} bg-background-light text-text-light dark:bg-background-dark dark:text-text-dark  transition-colors duration-300`}
       >
         <QueryProvider>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <ClientLayout>{children}</ClientLayout>{" "}
-            {/* Render the client component */}
+            {/* ClientLayout for layout structure */}
             <CartSidebar />
             <Toaster position="bottom-center" reverseOrder={false} />{" "}
             {/* Add Toaster for notifications */}
@@ -50,9 +50,9 @@ export default function RootLayout({
   );
 }
 
-export const viewport = {
+export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  userScalable: false
+  userScalable: false,
 };
