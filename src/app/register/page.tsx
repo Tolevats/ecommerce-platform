@@ -67,10 +67,11 @@ export default function RegisterPage() {
   }, [error]);
 
   return (
-    <div className="flex min-h-[calc(100vh-10rem)] items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-8 bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md">
+    <div className="flex min-h-[calc(100vh-20rem)] items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-hero-gradientFrom to-hero-gradientTo">
+      {/* Form container using theme bg colors for light/dark mode */}
+      <div className="w-full max-w-md space-y-8 bg-background-light dark:bg-background-dark p-8 rounded-lg shadow-xl">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
+          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight  text-text-light dark:text-text-dark">
             Create your account
           </h2>
         </div>
@@ -87,7 +88,7 @@ export default function RegisterPage() {
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="relative block w-full appearance-none rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:z-10 focus:border-primary focus:outline-none focus:ring-primary sm:text-sm dark:bg-gray-700"
+                className="relative block w-full appearance-none rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2 text-text-light dark:text-text-dark bg-background-light dark:bg-gray-700 placeholder-gray-500 dark:placeholder-gray-400 focus:z-10 focus:border-primary focus:outline-none focus:ring-primary sm:text-sm"
                 placeholder="Username"
               />
             </div>
@@ -103,7 +104,7 @@ export default function RegisterPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="relative block w-full appearance-none rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:z-10 focus:border-primary focus:outline-none focus:ring-primary sm:text-sm dark:bg-gray-700"
+                className="relative block w-full appearance-none rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2 text-text-light dark:text-text-dark bg-background-light dark:bg-gray-700 placeholder-gray-500 dark:placeholder-gray-400 focus:z-10 focus:border-primary focus:outline-none focus:ring-primary sm:text-sm"
                 placeholder="Email address"
               />
             </div>
@@ -115,10 +116,11 @@ export default function RegisterPage() {
                 id="password"
                 name="password"
                 type="password"
+                autoComplete="new-password" // Important for password managers
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="relative block w-full appearance-none rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:z-10 focus:border-primary focus:outline-none focus:ring-primary sm:text-sm dark:bg-gray-700"
+                className="relative block w-full appearance-none rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2 text-text-light dark:text-text-dark bg-background-light dark:bg-gray-700 placeholder-gray-500 dark:placeholder-gray-400 focus:z-10 focus:border-primary focus:outline-none focus:ring-primary sm:text-sm"
                 placeholder="Password"
               />
             </div>
@@ -130,29 +132,32 @@ export default function RegisterPage() {
                 id="confirm-password"
                 name="confirm-password"
                 type="password"
+                autoComplete="new-password" // Important for password managers
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="relative block w-full appearance-none rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:z-10 focus:border-primary focus:outline-none focus:ring-primary sm:text-sm dark:bg-gray-700"
+                className="relative block w-full appearance-none rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2 text-text-light dark:text-text-dark bg-background-light dark:bg-gray-700 placeholder-gray-500 dark:placeholder-gray-400 focus:z-10 focus:border-primary focus:outline-none focus:ring-primary sm:text-sm"
                 placeholder="Confirm Password"
               />
             </div>
           </div>
 
+          {/* Submit Button */}
           <div>
             <button
               type="submit"
               disabled={isLoading}
-              className="group relative flex w-full justify-center rounded-md border border-transparent bg-primary py-2 px-4 text-sm font-medium text-white hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary-light focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="group relative flex w-full justify-center rounded-md border border-transparent bg-primary py-2 px-4 text-sm font-medium text-primary-foreground hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary-light focus:ring-offset-2 focus:ring-offset-background-light dark:focus:ring-offset-background-dark disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              {isLoading ? (
+              {/* Loading Spinner */}
+              {isLoading && ( // Conditional rendering using &&
                 <svg
-                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                  // Use theme foreground color for spinner
+                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-primary-foreground"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                 >
-                  {" "}
                   <circle
                     className="opacity-25"
                     cx="12"
@@ -160,23 +165,28 @@ export default function RegisterPage() {
                     r="10"
                     stroke="currentColor"
                     strokeWidth="4"
-                  ></circle>{" "}
+                  ></circle>
                   <path
                     className="opacity-75"
                     fill="currentColor"
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>{" "}
+                  ></path>
                 </svg>
-              ) : null}
+              )}
+              {/* Button Text */}
               {isLoading ? "Creating account..." : "Create Account"}
             </button>
           </div>
         </form>
-        <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
+
+        {/* Link to Sign In Page */}
+        <p className="mt-2 text-center text-sm text-text-light dark:text-text-dark opacity-80">
+          {" "}
+          {/* Slightly reduced opacity for secondary text */}
           Already have an account?{" "}
           <Link
             href="/login"
-            className="font-medium text-primary hover:text-primary-dark dark:text-primary-light dark:hover:text-primary"
+            className="font-medium text-primary hover:text-primary-dark dark:text-primary-light dark:hover:text-primary transition-colors"
           >
             Sign in
           </Link>
