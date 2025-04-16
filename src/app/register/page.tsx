@@ -71,7 +71,7 @@ export default function RegisterPage() {
       {/* Form container using theme bg colors for light/dark mode */}
       <div className="w-full max-w-md space-y-8 bg-background-light dark:bg-background-dark p-8 rounded-lg shadow-xl">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight  text-text-light dark:text-text-dark">
+          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-text-light dark:text-text-dark">
             Create your account
           </h2>
         </div>
