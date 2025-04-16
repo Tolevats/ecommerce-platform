@@ -1,17 +1,17 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useAuthStore } from "@/store/authStore";
+import { useAuthStore, AuthState } from "@/store/authStore";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import toast from "react-hot-toast";
-import { useShallow } from "zustand/shallow";
+import { useShallow } from "zustand/react/shallow";
 
 export default function RegisterPage() {
   const router = useRouter();
   const { register, isLoading, error, isAuthenticated, clearError } =
     useAuthStore(
-      useShallow((state) => ({
+      useShallow((state: AuthState) => ({
         register: state.register,
         isLoading: state.isLoading,
         error: state.error,
@@ -25,41 +25,51 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  // Redirect if already authenticated
+  // Redirect if already authenticated when component mounts or auth state changes
   useEffect(() => {
     if (isAuthenticated) {
+      toast.success("Already logged in. Redirecting...");
       router.push("/products");
     }
   }, [isAuthenticated, router]);
 
   // Clear errors when the component mounts or unmounts
   useEffect(() => {
-    clearError();
+    clearError(); // Clear on mount
     return () => {
-      clearError();
+      clearError(); // Clear on unmount
     };
   }, [clearError]);
 
+  // Handle form submission
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    clearError();
+    clearError(); // Clear previous errors before new attempt
 
+    // Basic validation
     if (password !== confirmPassword) {
       toast.error("Passwords do not match!");
       return;
     }
+    if (password.length < 8) { // Minimum password length
+      toast.error("Password must be at least 8 characters long.");
+      return;
+    }
+    if (!email.includes("@")) { // Basic email validation
+      toast.error("Please enter a valid email address.");
+      return;
+    }
 
+    // Call the register function from the store
     const success = await register({ name, email, password });
 
     if (success) {
-      toast.success("Registration successful! Please log in.");
+      toast.success("Registration successful! Redirecting to login...");
       router.push("/login"); // Redirect to login page after successful registration
-    } else {
-      // Error handled via state/useEffect toast
     }
   };
 
-  // Show toast notification when error state changes
+  // Show toast notification when error state changes in the store
   useEffect(() => {
     if (error) {
       toast.error(error);
