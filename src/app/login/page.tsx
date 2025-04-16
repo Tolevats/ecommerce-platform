@@ -51,7 +51,7 @@ export default function LoginPage() {
       router.push("/products");
     } else {
       // Error is handled via the 'error' state from the store
-      toast.error(error || 'Login failed. Please try again.'); // Toast shown via useEffect below
+      toast.error(error || "Login failed. Please try again."); // Toast shown via useEffect below
     }
   };
 
@@ -63,10 +63,10 @@ export default function LoginPage() {
   }, [error]);
 
   return (
-    <div className="flex min-h-[calc(100vh-10rem)] items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-8 bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md">
+    <div className="flex min-h-[calc(100vh-20rem)] items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-hero-gradientFrom to-hero-gradientTo">
+      <div className="w-full max-w-md space-y-8 bg-background-light dark:bg-background-dark p-8 rounded-lg shadow-xl">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
+          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-text-light dark:text-text-dark">
             Sign in to your account
           </h2>
         </div>
@@ -116,7 +116,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="group relative flex w-full justify-center rounded-md border border-transparent bg-primary py-2 px-4 text-sm font-medium text-white hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary-light focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="group relative flex w-full justify-center rounded-md border border-transparent bg-primary py-2 px-4 text-sm font-medium text-primary-foreground hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary-light focus:ring-offset-2 focus:ring-offset-background-light dark:focus:ring-offset-background-dark disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {isLoading ? (
                 <svg
@@ -144,11 +144,11 @@ export default function LoginPage() {
             </button>
           </div>
         </form>
-        <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-center text-sm text-text-light dark:text-text-dark opacity-80">
           Or{" "}
           <Link
             href="/register"
-            className="font-medium text-primary hover:text-primary-dark dark:text-primary-light dark:hover:text-primary"
+            className="font-medium text-primary hover:text-primary-dark dark:text-primary-light dark:hover:text-primary transition-colors"
           >
             create an account
           </Link>
