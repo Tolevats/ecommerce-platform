@@ -30,8 +30,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
-      {" "}
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${inter.className} bg-background-light text-text-light dark:bg-background-dark dark:text-text-dark  transition-colors duration-300`}
       >
