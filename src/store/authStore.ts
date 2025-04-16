@@ -9,7 +9,7 @@ import {
 } from "@/lib/authApi"; // Import mock API functions and types
 
 // Define the state structure for the auth store
-interface AuthState {
+export interface AuthState {
   user: User | null; // User object if logged in, null otherwise
   isAuthenticated: boolean; // Flag indicating login status
   isLoading: boolean; // Loading state for async actions (login/register)
