@@ -2,9 +2,9 @@
 
 A basic e-commerce application built with Next.js (App Router), Tailwind CSS, TanStack Query (React Query), and Zustand, demonstrating modern frontend development patterns.
 
-## Live Demo
+<!-- ## Live Demo
 
-[Link to deployed application]
+[Link to deployed application] -->
 
 ## Features Implemented
 
@@ -40,11 +40,11 @@ A basic e-commerce application built with Next.js (App Router), Tailwind CSS, Ta
 
 ## Tech Stack
 
-* **Framework:** Next.js 14+ (App Router)
-* **Language:** TypeScript
-* **Styling:** Tailwind CSS v3+
-* **Server State Management:** TanStack Query (React Query) v5
-* **Client State Management:** Zustand
+* **Framework:** Next.js 15+ (App Router)
+* **Language:** TypeScript v5+
+* **Styling:** Tailwind CSS v4+
+* **Server State Management:** TanStack Query (React Query) v5+
+* **Client State Management:** Zustand v5+
 * **Theming:** next-themes
 * **Notifications:** react-hot-toast
 * **Linting/Formatting:** ESLint, Prettier
@@ -56,7 +56,7 @@ Follow these instructions to get a copy of the project running on your local mac
 
 **Prerequisites:**
 
-* Node.js (v18 or later recommended)
+* Node.js (v22 or later recommended)
 * npm or yarn or pnpm
 
 **Installation & Running:**
@@ -124,6 +124,7 @@ src/
 * Implement actual backend and replace mock APIs.
 * Add more robust form handling/validation (e.g., using `react-hook-form`).
 * Implement proper route protection using Next.js Middleware and cookie-based sessions.
+* Finish checkout process/order confirmation.
 * Add a "Favorites" feature.
 * Develop "My Account" page with mock order history.
 * Enhance UI/UX with more detailed styling, micro-interactions, and potentially component libraries.
