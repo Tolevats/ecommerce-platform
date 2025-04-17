@@ -3,11 +3,11 @@ import Image from "next/image";
 
 export default function LandingPage() {
   return (
-    <div className="@container min-h-[calc(100vh-20rem)] flex flex-col">
+    <div className="@container flex flex-col">
       {" "}
       <main className="flex-1">
         {/* Hero Section - Gradient using custom theme colors (defined via CSS vars in globals.css @theme) */}
-        <section className="h-[70vh] flex items-center justify-center bg-gradient-to-br from-hero-gradientFrom to-hero-gradientTo">
+        <section className="h-[80vh] flex items-center justify-center bg-gradient-to-br from-hero-gradientFrom to-hero-gradientTo">
           {" "}
           {/* from-blue-600 to-purple-700 */}
           <div className="max-w-4xl text-center px-4 sm:px-6 lg:px-8">

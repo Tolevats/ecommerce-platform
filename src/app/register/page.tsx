@@ -77,7 +77,7 @@ export default function RegisterPage() {
   }, [error]);
 
   return (
-    <div className="flex min-h-[calc(100vh-20rem)] items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-hero-gradientFrom to-hero-gradientTo">
+    <div className="flex h-[75vh] items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-hero-gradientFrom to-hero-gradientTo">
       {/* Form container using theme bg colors for light/dark mode */}
       <div className="w-full max-w-md space-y-8 bg-background-light dark:bg-background-dark p-8 rounded-lg shadow-xl">
         <div>
