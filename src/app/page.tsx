@@ -32,7 +32,7 @@ export default function LandingPage() {
 
             {/* Paragraph with responsive spacing - Custom text color (defined via CSS var in globals.css @theme) */}
             <p className="text-base md:text-xl lg:text-2xl text-text-hero mb-6 md:mb-8 leading-relaxed transition-all duration-300">
-              Welcome to OnPointStore - Where quality meets convenience.
+              Welcome to <strong><em>OnPointStore</em></strong> - Where quality meets convenience.
               <br />
               Explore curated collections, exclusive deals, and seamless
               shopping experiences.
