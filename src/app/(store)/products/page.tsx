@@ -88,7 +88,7 @@ export default function ProductsPage() {
   const isLoading = isLoadingCategories || isLoadingProducts;
 
   return (
-    <div>
+    <div h-screen="true" className="p-6">
       <h1 className="text-3xl font-bold mb-8 text-text-light dark:text-text-dark">
         Our Products
       </h1>
