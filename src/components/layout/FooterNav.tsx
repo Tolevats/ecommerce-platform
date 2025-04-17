@@ -15,7 +15,7 @@ const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
   const pathname = usePathname();
 
-  // Define routes where the simplified footer should be shown
+  // Routes where a simplified footer will be shown
   const simpleLayoutRoutes = ["/", "/login", "/register"];
   const isSimpleLayout = simpleLayoutRoutes.includes(pathname);
 
@@ -74,7 +74,7 @@ const Footer: React.FC = () => {
   const FullFooterContent = () => (
     <>
       {/* Standard grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12 justify-items-center">
         {" "}
         {/* Column 1: Brand/About */}
         <div className="col-span-2 md:col-span-1 space-y-4">
@@ -98,20 +98,20 @@ const Footer: React.FC = () => {
               OnPointStore
             </span>
           </Link>
-          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+          <p className="text-xs md:text-sm lg:text-base text-gray-600 dark:text-gray-400 leading-relaxed">
             Your favorite place for amazing products. Built with modern tech.
           </p>
         </div>
         {/* Column 2: Quick Links Mock */}
         <div className="space-y-2 md:space-y-4">
-          <h3 className="text-sm font-semibold text-gray-900 dark:text-white tracking-wider uppercase mb-4">
+          <h3 className="text-sm md:text-base lg:text-xl font-semibold text-gray-900 dark:text-white tracking-wider uppercase mb-4">
             Quick Links
           </h3>
           <ul className="space-y-2">
             <li>
               <Link
                 href="/products"
-                className="text-sm text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary-light transition-colors"
+                className="text-xs md:text-sm lg:text-base text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary-light transition-colors"
               >
                 Products
               </Link>
@@ -119,7 +119,7 @@ const Footer: React.FC = () => {
             <li>
               <Link
                 href="/about"
-                className="text-sm text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary-light transition-colors"
+                className="text-xs md:text-sm lg:text-base text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary-light transition-colors"
               >
                 About Us
               </Link>
@@ -127,7 +127,7 @@ const Footer: React.FC = () => {
             <li>
               <Link
                 href="/privacy"
-                className="text-sm text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary-light transition-colors"
+                className="text-xs md:text-sm lg:text-base text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary-light transition-colors"
               >
                 Privacy Policy
               </Link>
@@ -136,14 +136,14 @@ const Footer: React.FC = () => {
         </div>
         {/* Column 3: Help & Support Mock Links */}
         <div className="space-y-2 md:space-y-4">
-          <h3 className="text-sm font-semibold text-gray-900 dark:text-white tracking-wider uppercase mb-4">
+          <h3 className="text-sm md:text-base lg:text-xl font-semibold text-gray-900 dark:text-white tracking-wider uppercase mb-4">
             Support
           </h3>
           <ul className="space-y-2">
             <li>
               <Link
                 href="/faq"
-                className="text-sm text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary-light transition-colors"
+                className="text-xs md:text-sm lg:text-base text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary-light transition-colors"
               >
                 FAQ
               </Link>
@@ -151,7 +151,7 @@ const Footer: React.FC = () => {
             <li>
               <Link
                 href="/shipping"
-                className="text-sm text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary-light transition-colors"
+                className="text-xs md:text-sm lg:text-base text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary-light transition-colors"
               >
                 Shipping
               </Link>
@@ -159,7 +159,7 @@ const Footer: React.FC = () => {
             <li>
               <Link
                 href="/returns"
-                className="text-sm text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary-light transition-colors"
+                className="text-xs md:text-sm lg:text-base text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary-light transition-colors"
               >
                 Returns
               </Link>
@@ -168,7 +168,7 @@ const Footer: React.FC = () => {
         </div>
         {/* Column 4: Social Media Mock Links */}
         <div className="space-y-2 md:space-y-4">
-          <h3 className="text-sm font-semibold text-gray-900 dark:text-white tracking-wider uppercase mb-4">
+          <h3 className="text-sm md:text-base lg:text-xl font-semibold text-gray-900 dark:text-white tracking-wider uppercase mb-4">
             Follow Us
           </h3>
           <div className="flex space-x-4 md:space-x-6">
@@ -179,7 +179,7 @@ const Footer: React.FC = () => {
               aria-label="Instagram"
               className="text-gray-500 hover:text-primary dark:hover:text-primary-light transition-colors"
             >
-              <FaInstagram className="h-6 w-6" />
+              <FaInstagram className="h-6 w-6 md:h-8 md:w-8 lg:h-10 lg:w-10" />
             </a>
             <a
               href="https://x.com/"
@@ -188,7 +188,7 @@ const Footer: React.FC = () => {
               aria-label="X"
               className="text-gray-500 hover:text-primary dark:hover:text-primary-light transition-colors"
             >
-              <FaSquareXTwitter className="h-6 w-6" />
+              <FaSquareXTwitter className="h-6 w-6 md:h-8 md:w-8 lg:h-10 lg:w-10" />
             </a>
             <a
               href="https://www.facebook.com/"
@@ -197,7 +197,7 @@ const Footer: React.FC = () => {
               aria-label="Facebook"
               className="text-gray-500 hover:text-primary dark:hover:text-primary-light transition-colors"
             >
-              <FaSquareFacebook className="h-6 w-6" />
+              <FaSquareFacebook className="h-6 w-6 md:h-8 md:w-8 lg:h-10 lg:w-10" />
             </a>
           </div>
         </div>
@@ -205,10 +205,10 @@ const Footer: React.FC = () => {
 
       {/* Bottom Footer: Copyright & Author */}
       <div className="mt-10 pt-8 border-t border-gray-200 dark:border-gray-700 text-center">
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p className="md:text-sm lg:text-base text-gray-500 dark:text-gray-400">
           &copy; {currentYear} OnPointStore. All rights reserved.
         </p>
-        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+        <p className="text-xs md:text-sm lg:text-base text-gray-500 dark:text-gray-400 mt-1">
           Made with 💚 by @Tolevats
         </p>
       </div>
