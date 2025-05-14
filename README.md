@@ -63,7 +63,7 @@ Follow these instructions to get a copy of the project running on your local mac
 
 1.  **Clone the repository:**
     ```bash
-    git clone [https://ghttps://github.com/Tolevats/ecommerce-platform](https://https://github.com/Tolevats/ecommerce-platform)
+    git clone https://github.com/Tolevats/ecommerce-platform.git
     cd ecommerce-platform
     ```
 2.  **Install dependencies:**
@@ -86,12 +86,12 @@ Follow these instructions to get a copy of the project running on your local mac
 
 ## Folder Structure Overview
 
-src/
-├── app/ # Next.js App Router (routes, layouts, pages, api)
-├── components/ # Reusable UI components (layout, ui, cart, products)
-├── hooks/ # Custom React hooks
-├── lib/ # Utility functions, API clients, constants, types (api.ts, authApi.ts, query-client.ts, types.ts)
-├── store/ # Zustand state management stores (cartStore.ts, authStore.ts)
+src/<br>
+├── app/ # Next.js App Router (routes, layouts, pages, api) <br>
+├── components/ # Reusable UI components (layout, ui, cart, products)<br>
+├── hooks/ # Custom React hooks<br>
+├── lib/ # Utility functions, API clients, constants, types (api.ts, authApi.ts, query-client.ts, types.ts)<br>
+├── store/ # Zustand state management stores (cartStore.ts, authStore.ts)<br>
 └── styles/ # Global styles (globals.css)
 
 ## Design Assets
